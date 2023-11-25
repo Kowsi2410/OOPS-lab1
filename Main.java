@@ -2,108 +2,93 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
-package javaapplication68;
+package javaapplication69;
 import java.util.Scanner;
 
-// Interface for QueueOperations
-interface QueueOperations {
-    void enqueue(int data);
-    int dequeue();
-    void display();
+class Student {
+    String name;
+    int rollNo;
+
+    public Student(String name, int rollNo) {
+        this.name = name;
+        this.rollNo = rollNo;
+    }
 }
 
-// Class implementing the QueueOperations interface
-class MyQueue implements QueueOperations {
-    private static final int MAX_SIZE = 10; // Maximum size of the queue
-    private int[] queueArray;
-    private int front;
-    private int rear;
+class Result extends Student {
+    int marksSubject1, marksSubject2, marksSubject3;
 
-    // Constructor to initialize the queue
-    public MyQueue() {
-        queueArray = new int[MAX_SIZE];
-        front = -1;
-        rear = -1;
+    public Result(String name, int rollNo) {
+        super(name, rollNo);
     }
 
-    // Method to enqueue (insert) an element into the queue
-    public void enqueue(int data) {
-        if (rear == MAX_SIZE - 1) {
-            System.out.println("Queue is full. Cannot enqueue more elements.");
-        } else {
-            if (front == -1) {
-                front = 0;
-            }
-            queueArray[++rear] = data;
-            System.out.println(data + " enqueued into the queue.");
-        }
+    public void getMarks() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter marks for Subject 1 for " + name + ":");
+        this.marksSubject1 = scanner.nextInt();
+        System.out.println("Enter marks for Subject 2 for " + name + ":");
+        this.marksSubject2 = scanner.nextInt();
+        System.out.println("Enter marks for Subject 3 for " + name + ":");
+        this.marksSubject3 = scanner.nextInt();
     }
 
-    // Method to dequeue (remove) an element from the queue
-    public int dequeue() {
-        if (front == -1) {
-            System.out.println("Queue is empty. Cannot dequeue from an empty queue.");
-            return -1; // Assuming -1 represents an invalid value for this example
-        } else {
-            int dequeuedElement = queueArray[front++];
-            if (front > rear) {
-                front = rear = -1; // Reset the queue when it becomes empty
-            }
-            System.out.println(dequeuedElement + " dequeued from the queue.");
-            return dequeuedElement;
-        }
+    public int calculateTotalMarks() {
+        return marksSubject1 + marksSubject2 + marksSubject3;
     }
 
-    // Method to display the elements of the queue
-    public void display() {
-        if (front == -1) {
-            System.out.println("Queue is empty.");
+    public void displayResult() {
+        int totalMarks = calculateTotalMarks();
+        System.out.println(name + " with Roll No. " + rollNo + " has scored " + totalMarks + " marks.");
+        if (totalMarks >= 100) {
+            System.out.println("Result: Pass");
         } else {
-            System.out.print("Queue elements: ");
-            for (int i = front; i <= rear; i++) {
-                System.out.print(queueArray[i] + " ");
-            }
-            System.out.println();
+            System.out.println("Result: Fail");
         }
+    }
+}
+
+class Sports extends Result {
+    int sportsPoints;
+
+    public Sports(String name, int rollNo) {
+        super(name, rollNo);
+    }
+
+    public void getSportsPoints() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter sports points for " + name + ":");
+        this.sportsPoints = scanner.nextInt();
+    }
+
+    public void displaySportsPoints() {
+        System.out.println(name + " has earned " + sportsPoints + " sports points.");
     }
 }
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        MyQueue queue = new MyQueue();
+        // Create an array to store three student objects
+        Sports[] students = new Sports[3];
 
-        while (true) {
-            System.out.println("\nQueue Operations:");
-            System.out.println("1. Enqueue");
-            System.out.println("2. Dequeue");
-            System.out.println("3. Display");
-            System.out.println("4. Exit");
-            System.out.print("Enter your choice: ");
+        // Get input for each student
+        for (int i = 0; i < students.length; i++) {
+            System.out.println("Enter details for Student " + (i + 1));
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter name:");
+            String name = scanner.nextLine();
+            System.out.println("Enter roll number:");
+            int rollNo = scanner.nextInt();
 
-            int choice = scanner.nextInt();
+            students[i] = new Sports(name, rollNo);
+            students[i].getMarks();
+            students[i].getSportsPoints();
+        }
 
-            switch (choice) {
-                case 1:
-                    System.out.print("Enter the element to enqueue: ");
-                    int enqueueData = scanner.nextInt();
-                    queue.enqueue(enqueueData);
-                    break;
-                case 2:
-                    int dequeuedElement = queue.dequeue();
-                    if (dequeuedElement != -1) {
-                        System.out.println("Dequeued element: " + dequeuedElement);
-                    }
-                    break;
-                case 3:
-                    queue.display();
-                    break;
-                case 4:
-                    System.out.println("Exiting the program.");
-                    System.exit(0);
-                default:
-                    System.out.println("Invalid choice. Please enter a valid option.");
-            }
+        // Display results and sports points for each student
+        for (Sports student : students) {
+            student.displayResult();
+            student.displaySportsPoints();
+            System.out.println();
         }
     }
 }
